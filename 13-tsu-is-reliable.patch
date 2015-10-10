@@ -1,0 +1,29 @@
+Author: Damian Poole <damo@dlp.id.au>
+Force no_timer_check when CONFIG_X86_IO_APIC is configured
+Force tsc being reliable
+
+--- linux-4.2b/arch/x86/kernel/cpu/vmware.c	2015-10-10 12:04:27.832332270 +1100
++++ linux-4.2/arch/x86/kernel/cpu/vmware.c	2015-10-10 12:10:41.981876603 +1100
+@@ -26,6 +26,8 @@
+ #include <asm/div64.h>
+ #include <asm/x86_init.h>
+ #include <asm/hypervisor.h>
++#include <asm/timer.h>
++#include <asm/tsc.h>
+ 
+ #define CPUID_VMWARE_INFO_LEAF	0x40000000
+ #define VMWARE_HYPERVISOR_MAGIC	0x564D5868
+@@ -80,6 +82,12 @@
+ 	uint32_t eax, ebx, ecx, edx;
+ 
+ 	VMWARE_PORT(GETHZ, eax, ebx, ecx, edx);
++	#ifdef CONFIG_X86_IO_APIC
++	printk(KERN_INFO "VMWare: Setting no no_timer_check to 1 from %d\n", no_timer_check);
++	no_timer_check = 1;
++	#endif
++	printk(KERN_INFO "VMWare: Setting tsc=reliable to 1 from %d\n", tsc_clocksource_reliable);
++	tsc_clocksource_reliable = 1;
+ 
+ 	if (ebx != UINT_MAX)
+ 		x86_platform.calibrate_tsc = vmware_get_tsc_khz;
+

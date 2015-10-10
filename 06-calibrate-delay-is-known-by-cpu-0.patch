@@ -1,6 +1,18 @@
 Based on 0008-smpboot.patch 
 by Arjan van de Ven <arjan@linux.intel.com>
 
+--- linux-4.2o/arch/x86/kernel/smpboot.c	2015-10-10 11:50:17.670313928 +1100
++++ linux-4.2/arch/x86/kernel/smpboot.c		2015-10-10 11:52:31.115677685 +1100
+@@ -516,7 +516,7 @@
+  */
+ #define UDELAY_10MS_DEFAULT 10000
+ 
+-static unsigned int init_udelay = UDELAY_10MS_DEFAULT;
++static unsigned int init_udelay = 0; //force 0
+ 
+ static int __init cpu_init_udelay(char *str)
+ {
+
 --- linux-4.2_/arch/x86/kernel/tsc.c	2015-08-30 18:34:09.000000000 +0000
 +++ linux-4.2/arch/x86/kernel/tsc.c	2015-08-31 19:47:43.188312566 +0000
 @@ -1241,6 +1241,9 @@
